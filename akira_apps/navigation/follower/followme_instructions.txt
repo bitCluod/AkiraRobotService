@@ -1,0 +1,36 @@
+
+Person following
+
+Behavior to follow a person. Requires SRRG Localizer.
+
+-------------------------------------------------------------
+
+-- Start server nodes
+
+$ roslaunch rplidar_ros rplidar.launch
+
+$ roslaunch ros_arduino_python arduino.launch
+
+$ roslaunch follow_person.launch
+
+
+-- Opcional
+
+$ rosrun rococo_navigation follow_person_node -client none 2.0
+
+
+--------------------------------------------------------------
+
+Start the client
+
+
+2. Terminal
+
+-- Start the follow_person action (robot will start following the person)
+
+$ rosrun rococo_navigation follow_person_node -client none 0.25
+
+-- Stop the follow_person action (robot will stop following the person)
+
+$ rosrun rococo_navigation follow_person_node -client none stop
+

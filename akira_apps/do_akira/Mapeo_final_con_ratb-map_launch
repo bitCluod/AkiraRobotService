@@ -1,0 +1,197 @@
+
+//Podemos trabajar de dos maneras, personalmente prefiero la segunda, es decir, no ultilizando los archivos .launch.
+
+Primera opcion (launch):
+
+1.- Ejecuta el driver:
+
+$ roslaunch freenect_launch freenect.launch depth_registration:=true
+
+-- Esta activada la depth_registration
+
+$ roslaunch freenect_launch freenect.launch 
+
+$ roslaunch freenect_launch freenect-xyz.launch
+
+2.- Ejecuta el launch
+
+$ roslaunch rtabmap_ros rgbd_mapping.launch rtabmap_args:="--delete_db_on_start"
+
+3.- Dirigete a Window y elige la opción mostrar las vista grafica o GraphView.
+
+4.- Comienza a mapear normalmente.
+
+//Con esto deberas ver dos marcos uno dedicado a las nubes de puntos en 3D  y uno más, dedicado al mapa 2D; que es creado a través de los 		escaneos laser. Podemos visualizar dos tipos de mapas en 2D, es decir, uno se genera por los escaneos lasér de los nodos , y el otro 		se genera por la sombra que crea la nube de puntos 3D; la verdad desconozco cual mapa 2D sea el más fiable. Ahora bien para visualizar 		cualquiera de estos dos tipos de mapas 2D en rviz, lo primero que hay que hacer es agregar un "Map" y suscribirnos aun topico es 		específico:
+
+	Mapa 2D ensamblado por escaneos láser: / rtabmap / grid_map (mapa de cuadricula de ocupación)
+
+	Mapa 2D generado por la nube de puntos 3D: / rtabmap / proj_map (mapa de cuadricula por proyección)
+
+//Por lo mismo de la utilización de este archivo .launch no podemos guardar o cerrar una base de datos como tal; pero al finalizar la ejecución 	de este archivo, RTAB-MAP nos genera una base de datos que contiene la nube de puntos 3D y el mapa 2D; y la guarada dentro de la carpeta 		.ros. Esta base de datos la podemos utilizar desde el rtabmap directamente o a través de la herramienta de visualización de bases de 		datos que nos proporciona RTAB-MAP. (Es recomendable utilizarla directamentes de RTAB-MAP)
+
+//Otro punto importante a recalcar es que podemos exportar la nube de puntos 3D y el mapa 2D, directamente desde RTAB-MAP, si utilizar ningun 
+			comando por terminal.
+
+-- Necesitamos crear y/o corregir las siguientes transformaciones
+
+$ rgb_frame_id = 'camera_rgb_optical_frame' 
+$ depth_frame_id = 'camera_depth_optical_frame' 
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Correr Gmapping
+
+$ rosrun gmapping slam_gmapping _odom_frame:=/odom
+
+$ rosrun gmapping slam_gmapping scan:=/base_scan _odom_frame:=/odom
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+$ roslaunch freenect_launch freenect.launch 
+
+$ roslaunch ros_arduino_python arduino.launch
+
+$ roslaunch motor_driver joy_teleop.launch 
+
+$ roslaunch ros_arduino_python gmapping.launch 
+
+-- Para visualizar de una computadora remota la construcción del mapa
+
+$ export ROS_MASTER_URI=http://192.168.1.91:11311/
+
+$ export ROS_IP=192.168.1.91
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+--Fake escaneo laser
+
+$ roslaunch freenect_launch freenect.launch 
+
+$ rosrun depthimage_to_laserscan depthimage_to_laserscan image:=/camera/depth_registered/image_raw
+
+$ rosrun map_server map_server my_map.yaml
+
+----------------------------------------------------------------------------------------------------------------------------
+
+$ rosrun depthimage_to_laserscan depthimage_to_laserscan 
+
+$ rosrun depthimage_to_laserscan depthimage_to_laserscan image:=/camera/depth/image_raw
+
+-- Transformación del base_laser
+
+~output_frame_id (str, default: camera_depth_frame)
+
+    The frame id of the laser scan. For point clouds coming from an "optical" frame with Z forward, this value should be set to the corresponding frame with X forward and Z up. 
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+Para abrir la herramienta de visualización de datos en la base de datos de RTAB-MAP usa el siguiente comando:
+
+$ rtabmap-databaseViewer 
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+//Comando para resetear la odometria:
+
+$ rosservice call /rtabmap/reset_odom
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+//Visualiza la base de datos recien creada
+
+$ rtabmap-databaseViewer ~/.ros/rtabmap.db
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+//Borra toda la memoria de la base de datos actual
+
+$ rosservice call /rtabmap/reset
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+--Finalmente para guardar el mapa 2D debes de utilizar este comando:
+
+$ rosrun map_server map_saver -f map:=/rtabmap/proj_map
+
+$ rosrun map_server map_saver -f pasillo_neto
+
+$ rosrun map_server map_saver -f circuito_1
+
+---------------- Consumir el mapa ---------------------------------------------------------------------------------------------------------
+
+$ rosrun map_server map_server my_map.yaml
+
+--El comando lo puedes usar al final, es decir, una vez generado el mapa 2D.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+--Para guardar la nube de puntos desde el rviz primero debes de ejecutar este comando antes de comenzar a mapear con el kinect:
+
+$ rosrun pcl_ros pointcloud_to_pcd input:=/rtabmap/cloud_map
+
+--EL comando anterior ira generando "imagenes" de la nube de puntos 3D (es decir los mapas), en formato pcl.
+
+--Para poder visualizar estas "imagenes" usa el siguiente comando:
+
+$ pcl_viewer "nombre de la imagen
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+NOTA IMPORTANTE:
+
+Tambien podemos usar este driver y este otro .launch, y todo funcionará de la misma manera:
+
+$ roslaunch openni_launch openni.launch depth_registration:=true
+
+$ roslaunch rtabmap_ros rtabmap.launch rtabmap_args:="--delete_db_on_start"	
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+MODO DE LOCALIZACIÓN
+
+$ roslaunch freenect_launch freenect.launch depth_registration:=true
+
+$ roslaunch rtabmap_ros rtabmap.launch localization:=true 
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+							README sobre cómo hacer que RVIS funcione en varias computadoras
+
+--------------------------------------------------
+
+Una tarea común es introducir SSH en la computadora del robot y ejecutar RVIZ para obtener la salida del láser y otras visualizaciones. La ejecución de RVIZ directamente en la computadora remota no funcionará debido a la forma en que se implementa RVIZ. La solución es ejecutar RVIZ localmente. Para hacer esto, necesitamos configurar la computadora local para ubicar el NODO MAESTRO remoto para mostrar la información correcta.
+
+Asumir:
+
+IP: 192.168.1.0 // computadora remota (robot)
+IP: 192.168.1.1 // computadora local (host)
+
+*** ssh en computadora remota ***
+
+1. ssh -X erratic@192.168.1.0
+
+En la terminal remota:
+
+2. $ export ROS_MASTER_URI=http://192.168.1.173:11311 #esto asegura que no usemos localhost, sino la dirección IP real como nodo maestro
+
+3. $ export ROS_IP=192.168.1.173 #esto asegura que ROS sabe que no podemos usar el nombre de host directamente (debido a problemas con el firewall DHCP)
+
+4. roscore
+
+En la terminal local:
+
+1. $ export ROS_MASTER_URI=http://192.168.1.0:11311 #le dice a la computadora local que busque el control remoto aquí
+
+2. $ export ROS_IP=192.168.1.1 #esto asegura que ROS sepa que no podemos usar el nombre de host directamente (debido a problemas con el firewall DHCP)
+
+3. rosrun rviz rviz // activa rviz en la computadora local. Se conectará al nodo maestro de la computadora remota
+
+** para verificar, abra una terminal remota **
+1. rxgraph
+
+** Tenga en cuenta que cada vez que se abre un nuevo terminal en la computadora local / remota, tenemos que llamar a los 2 comandos de exportación. Para hacer esto permanente, edite el archivo ~ / .bashrc:
+
+1. sudo nano ~/.bashrc // agrega los dos comandos de exportación al final del archivo.
+
+2. source ~/.bashrc // y reinicie el terminal
+
+

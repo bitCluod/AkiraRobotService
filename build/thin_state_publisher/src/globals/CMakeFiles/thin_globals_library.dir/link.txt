@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC -O3 -DNDEBUG  -shared -Wl,-soname,libthin_globals_library.so -o /home/salvathor/Documentos/Akira_1.2.2/devel/lib/libthin_globals_library.so CMakeFiles/thin_globals_library.dir/system_utils.cpp.o 

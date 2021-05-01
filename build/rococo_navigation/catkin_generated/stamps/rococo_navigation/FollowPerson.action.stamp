@@ -1,0 +1,12 @@
+# Goal
+# target person
+uint64  person_id
+# max velocity [m/s]
+float32 max_vel
+---
+# Result
+string result
+---
+# Feedback
+string feedback
+

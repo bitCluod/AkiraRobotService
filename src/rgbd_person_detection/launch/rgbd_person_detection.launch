@@ -1,0 +1,75 @@
+<launch>
+  <arg name="camera_name_rgb" default="camera/rgb" />
+  <arg name="camera_name_depth" default="camera/depth" />
+  <arg name="camera_frame" default="camera_frame" />
+  <arg name="use_kinect" default="false" />
+  <arg name="use_xtion" default="false" />
+  <arg name="use_astra" default="false" />
+  <arg name="use_pepper" default="false" />
+  <arg name="pepper_ip" default="192.168.130.27" />
+  <arg name="pepper_port" default="9559" />
+  <arg name="roscore_ip" default="127.0.0.1" />
+  <arg name="network_if" default="lo" />
+  <arg name="GUI" default="false" />
+  <arg name="facedetection" default="false" />
+  <arg name="bodydetection" default="false" />
+  <arg name="virtualbuttons" default="false" />
+
+  <group if="$(arg use_kinect)">
+		<node pkg="thin_kinect" type="thin_kinect_node" name="kinect" output="screen">
+		  <param name="device_num" value="0" />
+		  <param name="rgb_mode" value="1" />
+		  <param name="depth_mode" value="5" />
+		  <param name="topic" value="$(arg camera_name)" />
+		</node>
+  </group>
+
+  <group if="$(arg use_xtion)">
+	<node pkg="thin_xtion" type="thin_xtion_node" name="xtion" output="screen">
+      <param name="device_num" value="0" />
+      <param name="depth_mode" value="4" />
+      <param name="rgb_mode" value="9" />
+      <param name="frame_skip" value="0" />
+      <param name="sync" value="0" />
+      <param name="registration" value="1" />
+  	</node>
+  </group>
+
+  <group if="$(arg use_astra)">
+      <!-- astra node -->
+      <node pkg="astra_camera" type="astra_camera_node" name="astra" output="screen">
+          <param name="rgb_frame_id" value="$(arg camera_frame)" />
+          <param name="depth_frame_id" value="$(arg camera_frame)" />
+          <remap from="/rgb/image" to="$(arg camera_name_rgb)/image_raw" />
+          <remap from="/depth/image" to="$(arg camera_name_depth)/image_raw" />
+      </node>
+  </group>
+
+  <group if="$(arg use_pepper)">
+	<include  file="$(find naoqi_driver)/launch/naoqi_driver.launch"> 
+		<arg name="nao_ip" value="$(arg pepper_ip)" />
+		<arg name="nao_port" value="$(arg pepper_port)" />
+		<arg name="roscore_ip" value="$(arg roscore_ip)" />
+		<arg name="network_interface" value="$(arg network_if)" />
+		<arg name="namespace" value="pepper" />
+    </include>
+  </group>
+
+	<node pkg="rgbd_person_detection" type="rgbd_person_detection" name="rgbd_person_detection" output="screen">
+      <param name="camera_name_rgb" value="$(arg camera_name_rgb)" />
+      <param name="camera_name_depth" value="$(arg camera_name_depth)" />
+      <param name="model_dir" value="$(find person_detection)" />
+      <param name="GUI" type="bool" value="$(arg GUI)" />
+      <param name="facedetection" type="bool" value="$(arg facedetection)" />
+      <param name="bodydetection" type="bool" value="$(arg bodydetection)" />
+      <param name="virtualbuttons" type="bool" value="$(arg virtualbuttons)" />
+  </node>
+
+  <!-- transforms -->
+  <!-- NOTE: thin_state_publisher publishes tf only when it receives an odom message!!! -->
+  <node pkg="thin_state_publisher" type="thin_state_publisher_node" name="state_publisher"
+	    args="$(find depth2laser)/config/transforms.txt" output="screen">
+  </node>
+
+</launch>
+

@@ -1,0 +1,12 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~max_vel_x" : \b [double] Maximum translational velocity min: -std::numeric_limits<double>::infinity(), default: 0.75, max: std::numeric_limits<double>::infinity()
+- \b "~max_vel_theta" : \b [double] Maximum rotational velocity min: -std::numeric_limits<double>::infinity(), default: 0.5, max: std::numeric_limits<double>::infinity()
+- \b "~attractiveDistanceInfluence_m" : \b [double] Attractive distance influence (m) min: -std::numeric_limits<double>::infinity(), default: 1.0, max: std::numeric_limits<double>::infinity()
+- \b "~obstaclesDistanceInfluence_m" : \b [double] Obstacle distance influence (m) min: -std::numeric_limits<double>::infinity(), default: 1.0, max: std::numeric_limits<double>::infinity()
+- \b "~force_scale" : \b [double] Force scale (m) min: -std::numeric_limits<double>::infinity(), default: 0.5, max: std::numeric_limits<double>::infinity()
+- \b "~momentum_scale" : \b [double] Momentum scale (m) min: -std::numeric_limits<double>::infinity(), default: 0.15, max: std::numeric_limits<double>::infinity()
+- \b "~robot_radius" : \b [double] Robot radius (m) min: -std::numeric_limits<double>::infinity(), default: 0.2, max: std::numeric_limits<double>::infinity()
+

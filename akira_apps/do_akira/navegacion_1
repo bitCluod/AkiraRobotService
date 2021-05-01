@@ -1,0 +1,120 @@
+
+-- NODOS A EJECUTAR PARA NAVEGAR --
+
+$ roscore
+
+$ roslaunch rplidar_ros rplidar.launch          -- Datos del sensor laser, y filtro de particulas
+
+$ roslaunch ros_arduino_python arduino.launch   -- Transformaciones, modelo URDF del robot y odometría
+
+$ roslaunch motor_driver joy_teleop.launch      -- Nodo para controlar el robot a través de un JoyStick
+
+$ roslaunch ros_arduino_python amcl.launch		-- Nodo de localización del robot, lectura de un mapa previo y ejecución del nodo move_base
+
+$ rosrun rviz rviz
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+-- NODOS A EJECUTAR, PARA REALIZAR UN MAPA --
+
+$ roscore
+
+$ roslaunch rplidar_ros rplidar.launch          -- Datos del sensor laser, y filtro de particulas
+
+$ roslaunch ros_arduino_python arduino.launch   -- Transformaciones, modelo URDF del robot y odometría
+
+$ roslaunch motor_driver joy_teleop.launch      -- Nodo para controlar el robot a través de un JoyStick
+
+$ roslaunch ros_arduino_python gmapping.launch  -- Nodo para realizar el mapa de un espacio determinado
+
+$ rosrun rviz rviz
+
+-- NODO OPCIONAL PARA ENVIAR METAS ESPECIFICAS Y GENERAR EL MAPA SIN USAR EL JOYSTICK --
+
+$ roslaunch ros_arduino_python move_base.launch 
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+-- Proceso para utilizar la localización (método antiguo) --
+
+$ roscore
+
+$ roslaunch freenect_launch freenect.launch 
+
+$ roslaunch rplidar_ros rplidar.launch
+
+$ roslaunch ros_arduino_python arduino.launch
+
+$ roslaunch motor_driver joy_teleop.launch 
+
+$ rosrun rviz rviz
+
+$ roslaunch amcl.launch -- Nodo de localización para el robot
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+-- Paso para realizar un mapa (método antiguo) --
+
+$ roscore
+
+$ roslaunch freenect_launch freenect.launch
+
+$ roslaunch rplidar_ros rplidar.launch
+
+$ roslaunch ros_arduino_python arduino.launch
+
+$ roslaunch motor_driver joy_teleop.launch 
+
+$ roslaunch ros_arduino_python amcl.launch  #PROBAR
+
+$ rosrun rviz rviz
+
+-- OPCIONALES --
+
+$ roslaunch ros_arduino_python gmapping.launch 
+
+$ roslaunch ros_arduino_python move_base.launch 
+
+-- Opcionales --
+
+$ roslaunch move_base.launch
+
+$ roslaunch gradient_based_navigation obstacle_avoidance.launch
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+-- Follow Person (Método incompleto) --
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+$ roslaunch freenect_launch freenect.launch 
+
+$ roslaunch ros_arduino_python arduino.launch
+
+$ rosrun depthimage_to_laserscan depthimage_to_laserscan image:=/camera/depth/image_raw
+
+$ rosrun laser_analysis laserobstacle
+
+$ rosrun rococo_navigation follow_person_node -server none 
+
+$ roslaunch spencer_people_tracking_launch freiburg_people_tracking.launch 
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+---- TUTORIAL ANTIGUO ----
+
+$ roslaunch move_base.launch -- Nodo encargado de realizar y gestionar las metas
+
+$ python move.py 4.7 0.2 1.6 -- Nodo que envia una meta al robot
+
+$ roslaunch gradient_based_navigation obstacle_avoidance.launch -- Nodo para evitar obstaculos (opcional)
+
+$ python motor_tf_v2.py -- Nodo para las transformaciones restantes del driver del Kinect
+
+$ rosrun map_server map_server my_map.yaml -- Comando para cargar un mapa previamente realizado
+
+----------------------------------------------------------------------------------------------------------------------------------------
+

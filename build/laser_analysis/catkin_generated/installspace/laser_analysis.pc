@@ -1,0 +1,8 @@
+prefix=/home/salvathor/Documentos/Akira_1.2.2/install
+
+Name: laser_analysis
+Description: Description of laser_analysis
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: roscpp message_runtime

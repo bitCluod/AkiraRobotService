@@ -1,0 +1,24 @@
+
+Izquierdo:
+
+Motor rojo: M2A
+Motor negro: M2B
+
+Enconders: 
+
+Blanco 3
+Amarillo 2
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+Derecho:
+
+Motor rojo: M1B
+Motor negro: M1A
+
+Encoders:
+
+Blanco A4
+Amarillo A5
+
+*Contrario

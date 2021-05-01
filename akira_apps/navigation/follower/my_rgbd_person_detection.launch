@@ -1,0 +1,21 @@
+<launch>
+
+  <arg name="camera_name_rgb" default="camera/rgb" />
+  <arg name="camera_name_depth" default="camera/depth" />
+  <arg name="GUI" default="true" />
+  <arg name="facedetection" default="false" />
+  <arg name="bodydetection" default="true" />
+  <arg name="virtualbuttons" default="false" />
+
+	<node pkg="rgbd_person_detection" type="rgbd_person_detection" name="rgbd_person_detection" output="screen">
+      <param name="camera_name_rgb" value="$(arg camera_name_rgb)" />
+      <param name="camera_name_depth" value="$(arg camera_name_depth)" />
+      <param name="model_dir" value="$(find person_detection)" />
+      <param name="GUI" type="bool" value="$(arg GUI)" />
+      <param name="facedetection" type="bool" value="$(arg facedetection)" />
+      <param name="bodydetection" type="bool" value="$(arg bodydetection)" />
+      <param name="virtualbuttons" type="bool" value="$(arg virtualbuttons)" />
+  </node>
+
+</launch>
+

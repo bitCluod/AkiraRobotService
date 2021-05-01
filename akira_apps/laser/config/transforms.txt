@@ -1,0 +1,2 @@
+STATIC_TRANSFORM  base_frame  camera_link   tq     0.20  0  0.24   0  0  0
+

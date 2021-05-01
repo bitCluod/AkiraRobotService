@@ -1,0 +1,8 @@
+prefix=/home/salvathor/Documentos/Akira_1.2.2/install
+
+Name: thin_state_publisher
+Description: Description of thin_state_publisher
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lthin_globals_library -lthin_txt_io_library -lthin_ros_wrappers_library
+Requires: 

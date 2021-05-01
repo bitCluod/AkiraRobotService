@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<robot name="akira"  
+       xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find akira_descriptor)/urdf/akira_body.urdf.xacro" />
+
+  <!-- Body of Akirabot, with plates, standoffs and Create (including sim sensors) -->
+  <akira_body/>
+
+</robot>

@@ -1,0 +1,64 @@
+<launch>
+
+  <arg name="camera_name_rgb" default="camera/rgb" />
+  <arg name="camera_name_depth" default="camera/depth" />
+  <arg name="GUI" default="true" />
+  <arg name="facedetection" default="true" />
+  <arg name="bodydetection" default="true" />
+  <arg name="virtualbuttons" default="false" />
+
+  <arg name="initial_pose_x" default="0.0" />
+  <arg name="initial_pose_y" default="0.0" />
+  <arg name="initial_pose_a" default="0.0" />
+
+  <arg name="map_name" default="casa_2" />
+
+  <arg name="mapsdir" default="/home/salvathor/Documentos/Akira_1.2.2/akira_apps/mapping/maps" />
+
+  <node pkg="map_server" type="map_server" name="map_server" args="$(arg mapsdir)/$(arg map_name).yaml" respawn="false" >
+        <param name="frame_id" value="/map" />
+   </node>
+
+  <include file="$(find freenect_launch)/launch/freenect.launch" /> 
+
+  <node pkg="spqrel_navigation" type="srrg_localizer2d_node" name="srrg_localizer" respawn="true">
+
+    <!-- Override Frame Params to include prefix -->
+    <param name="laser_topic" value="/scan_filtered" />
+    <param name="global_frame_id" value="/map" /> 
+    <param name="base_frame_id" value="/base_link" />
+    <param name="odom_frame_id" value="/odom" />
+
+    <param name="use_gui" value="false" />
+    <param name="tf_timecheck" value="false" />
+
+    <!-- Set initial pose -->
+    <param name="initial_pose_x" value="$(arg initial_pose_x)" />
+    <param name="initial_pose_y" value="$(arg initial_pose_y)" />
+    <param name="initial_pose_a" value="$(arg initial_pose_a)" />
+    <param name="initial_cov_xx" value="0.25" />
+    <param name="initial_cov_yy" value="0.25" />
+    <param name="initial_cov_aa" value="0.25" />
+
+  </node>
+
+  <node pkg="laser_analysis" type="laserobstacle" name="laserobstacle" respawn="false" > </node>
+
+  <node pkg="rgbd_person_detection" type="rgbd_person_detection" name="rgbd_person_detection" output="screen">
+      
+      <param name="camera_name_rgb" value="$(arg camera_name_rgb)" />
+      <param name="camera_name_depth" value="$(arg camera_name_depth)" />
+      <param name="model_dir" value="$(find person_detection)" />
+      <param name="GUI" type="bool" value="$(arg GUI)" />
+      <param name="facedetection" type="bool" value="$(arg facedetection)" />
+      <param name="bodydetection" type="bool" value="$(arg bodydetection)" />
+      <param name="virtualbuttons" type="bool" value="$(arg virtualbuttons)" />
+
+  </node>
+
+  <node pkg="rococo_navigation" type="follow_person_node" name="follow_person_node" 
+        args="-server none" respawn="false" >
+  </node>
+
+</launch>
+

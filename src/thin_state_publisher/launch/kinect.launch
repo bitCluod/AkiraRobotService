@@ -1,0 +1,10 @@
+<launch>
+
+  <!-- transforms -->
+  <node pkg="thin_state_publisher" type="thin_state_publisher_node" name="state_pub_laser"
+	    args="-odom_topic none -odom_frame_id none /home/salvathor/Documentos/Akira_1.2.2/marrtino_apps/laser/config/transforms.txt" output="screen">
+  </node>
+
+</launch>
+
+

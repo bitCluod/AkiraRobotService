@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/salvathor/Documentos/Akira_1.2.2/src/thin_state_publisher/src/globals/system_utils.cpp
+system_utils.h
+/home/salvathor/Documentos/Akira_1.2.2/src/thin_state_publisher/src/globals/system_utils.h
+iostream
+-
+fstream
+-
+
+/home/salvathor/Documentos/Akira_1.2.2/src/thin_state_publisher/src/globals/system_utils.h
+sys/time.h
+-
+sys/resource.h
+-
+

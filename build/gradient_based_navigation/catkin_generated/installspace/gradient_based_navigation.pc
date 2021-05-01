@@ -1,0 +1,8 @@
+prefix=/home/salvathor/Documentos/Akira_1.2.2/install
+
+Name: gradient_based_navigation
+Description: Description of gradient_based_navigation
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: 

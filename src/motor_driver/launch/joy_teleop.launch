@@ -1,0 +1,18 @@
+<launch>
+
+ <!-- Joy node -->
+
+  <node pkg="joy" type="joy_node" name="Node_joy" >
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.12" />
+  </node>
+
+  <node pkg="motor_driver" type="joy_twis.py" name="joy_controler"> </node>
+
+<!--
+  <node pkg="motor_driver" type="motor_driver.py" name="motor_controler"> </node> 
+  <node pkg="motor_driver" type="tf_v3.py" name="tf_publisher"> </node>
+-->
+
+</launch>
+
